@@ -1,0 +1,136 @@
+trigger:
+
+- dev
+
+
+
+ 
+
+
+
+resources:
+
+- repo: self
+
+
+
+ 
+
+
+
+variables:
+
+  # Name of your Azure Service Container Registry that was created
+  # during the service connection setup in azure pipelines
+  
+  dockerRegistryServiceConnection: 'TBD-ACR'
+ 
+  # Name of the Azure Service Connection that was created during the 
+  # service connection setup in azure pipelines
+  
+  rgServiceConnection: 'TBD-RG'
+  
+  # Name of your Resource Group in Azure Subscription
+  rgName: 'trial007'
+
+  # Name of the container found in the container registry
+  imageRepository: 'test1'
+
+  # Name of the container registry that houses the container registry
+  containerRegistry: 'neupane.azurecr.io'
+
+  # this part should always be the same
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+
+  # the name you gave the web app when deploying the app service plan
+  webAppName: 'neupane-shiny'
+  
+  slotname: 'dev'
+  tag: '$(Build.BuildId)'
+  
+
+  # Agent VM image name
+
+  vmImageName: 'ubuntu-latest'
+
+
+
+ 
+
+
+
+stages:
+
+- stage: Build
+
+  displayName: Build and push stage
+
+  jobs:  
+
+  - job: Build
+
+    displayName: Build
+
+    pool:
+
+      vmImage: $(vmImageName)
+
+    steps:
+
+    - task: Docker@2
+
+      displayName: Build and push an image to container registry
+
+      inputs:
+
+        command: buildAndPush
+
+        repository: $(imageRepository)
+
+        dockerfile: $(dockerfilePath)
+
+        containerRegistry: $(dockerRegistryServiceConnection)
+
+        tags: |
+          $(tag)
+ 
+
+
+
+- stage: 'Development'
+
+  displayName: 'Deploy to dev slot'
+
+  condition: succeeded()
+
+  jobs:
+
+  - job: Deploy
+
+    displayName: Deploy
+
+    pool:
+
+      vmImage: 'Ubuntu-16.04'
+
+    steps:
+
+    - task: AzureRmWebAppDeployment@4
+
+      inputs:
+
+        ConnectionType: 'AzureRM'
+
+        azureSubscription: $(rgServiceConnection)
+
+        appType: 'webAppContainer'
+
+        WebAppName: $(webAppName)
+
+        ResourceGroupName: $(rgName)
+
+        DockerNamespace: $(containerRegistry)
+
+        DockerRepository: $(imageRepository)
+
+        DockerImageTag: $(tag)
