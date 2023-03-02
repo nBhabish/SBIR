@@ -1,0 +1,39 @@
+@media (max-width: 576px) {  
+  .navbar-header {
+    width: 100% !important;
+  }
+  .navbar-toggle {
+      float: right !important;
+  }
+}
+
+.pull-right {
+  float: right !important;
+}
+
+/*changing background color of well panel*/
+.well {
+    padding: 1.25rem;
+    border-radius: .60rem
+}
+
+/*navbar background color*/
+.bg-light, .navbar.navbar-default {
+    color: white;
+}
+
+/*changing color of title in navbar */
+.navbar-light .navbar-brand, .navbar.navbar-default .navbar-brand {
+    color: #fff;
+}
+
+
+.selectize-input.full {
+    background-color: white;
+}
+
+.selectize-input, .selectize-control.single .selectize-input.input-active {
+    background: white;
+    cursor: text;
+    display: inline-block;
+}
