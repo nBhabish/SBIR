@@ -34,7 +34,7 @@ variables:
   rgName: 'trial007'
 
   # Name of the container found in the container registry
-  imageRepository: 'test1'
+  imageRepository: 'sbir'
 
   # Name of the container registry that houses the container registry
   containerRegistry: 'neupane.azurecr.io'
@@ -111,7 +111,7 @@ stages:
 
     pool:
 
-      vmImage: 'Ubuntu-16.04'
+      vmImage: 'Ubuntu-latest'
 
     steps:
 
